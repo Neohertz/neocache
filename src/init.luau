@@ -212,7 +212,7 @@ end
 
 	Optional `at` paramter for peeking at a specific index.
 
-	@returns object, isLocked
+	@returns object, isReserved
 ]=]
 function neocache.peek<T>(self: NeoCache<T>, at: number?): (T, boolean)
 	assert(getmetatable(self), ERROR.NO_SELF)
@@ -221,7 +221,7 @@ function neocache.peek<T>(self: NeoCache<T>, at: number?): (T, boolean)
 end
 
 --[=[
-	Clear the cache and cleanup any created instances, reguardless if they are locked or not.
+	
 ]=]
 function neocache.clear(self: NeoCache<any>): ()
 	assert(getmetatable(self), ERROR.NO_SELF)
@@ -238,9 +238,9 @@ end
 --[=[
 	Resize the cache. This operation is destructive on shrink.
 
-	Size will always be greater than zero reguardless of passed value.
+	Size will always be greater than zero regardless of passed value.
 
-	Automatically repopulates the cache with the existing or provided buffer.
+	Automatically repopulates the cache (if necessary) with the existing or provided buffer.
 
 	@param newSize (number) the new cache size.
 	@param buffer (number) how many items to cache immediately.
@@ -325,7 +325,7 @@ function neocache.setPointer<T>(self: NeoCache<T>, location: number): number
 end
 
 --[=[
-	Release all in-use (locked) objects.
+	Release all in-use (reserved) objects.
 ]=]
 function neocache.releaseAll(self: NeoCache<any>): ()
 	assert(getmetatable(self), ERROR.NO_SELF)

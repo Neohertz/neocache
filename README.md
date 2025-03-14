@@ -1,5 +1,5 @@
 # Neocache
-A versatile and preformant cache module for instances and beyond.
+A blazingly fast caching module for instances and beyond.
 
 ## Example Usage
 ```lua
@@ -38,4 +38,89 @@ end, 100, 10)
 ```
 
 # API
-## 
+> [!INFO]
+> All examples will use the above cache example.
+
+### `cache:useCleanupMethod<T>(fn: (obj: T) -> ())`
+Override the default cleanup method with a custom one. This method will be invoked  by both `cache:clear()` and `cache:destroy()`.
+
+Useful when using non-instance items within the cache.
+```lua
+cache:useCleanupMethod(function(sound: Sound)
+	sound:Stop()
+	sound:Destroy()
+end)
+```
+
+###  `cache:next()`
+Get a reference to the next item in the cache and increment the internal pointer.
+
+```lua
+local sound = audioCache:next()
+
+if sound then
+	sound:Play()
+end
+```
+
+###  `cache:lockNext()`
+Same thing as `cache:next()`, but this instance is locked until the returned unlock method is invoked.
+
+While this item is locked or *"checked out"*, it will be skipped in any future `next()` or `lockNext()` calls.
+
+> This is useful if you want to prevent overlapping operations on a specific item in the cache.
+
+```lua
+local sound, release = audioCache:lockNext()
+
+if sound then
+	sound:Play()
+	sound.Ended:Once(function()
+		release()
+	end)
+end
+```
+
+### `cache:unique()`
+Grab a unique, non cached instance from the factory.
+```lua
+local uniqueSoundEffect = audioCache:unique()
+```
+
+### `cache:peek()`
+View the next item in the cache.
+```lua
+local ref = audioCache:peek()
+```
+
+### `cache:resize(newSize: number, newBuffer: number?)`
+Resize the cache. This operation is destructive on shrinking.
+
+If the cache grows to a size below the buffer, those items will be immediately generated.
+
+```lua
+-- Current Size: 100 | Current Buffer: 10
+-- 5 deletions guaranteed, 90 possible.
+cache:resize(5)
+
+-- Current Size: 5 | Current Buffer: 10
+-- 5 factory invocations guaranteed.
+cache:resize(10)
+```
+
+### `cache:clear()`
+Entirely wipe the cache. Invokes the cleanup method. Neocache will automatically regenerated the objects on subsequent `next()` or `lockNext()` calls.
+
+```lua
+audioCache:clear()
+audioCache:next() -- invokes factory.
+```
+
+### `cache:destroy()`
+Destroy the cache and any instances within entirely.
+Subsequent calls to this cache will error.
+
+```lua
+cahce:destroy()
+cache:next() -- ❌ error!
+```

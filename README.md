@@ -9,9 +9,9 @@ local audioCache = neocache.new(function()
 	return sfx
 end, 100, 10)
 
-function playSoundEffect()
+function playSoundEffect(id: string)
 	local sound = audioCache:next()
-	sound.SoundID = "rbxassetid//9114092958"
+	sound.SoundID = id
 	sound:Play()
 end
 ```

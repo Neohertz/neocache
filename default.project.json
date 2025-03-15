@@ -1,6 +1,6 @@
 {
-    "name": "neocache",
-    "tree": {
-      "$path": "src"
-    }
+	"name": "neocache",
+	"tree": {
+		"$path": "package"
+	}
 }

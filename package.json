@@ -1,7 +1,7 @@
 {
 	"name": "@rbxts/neocache",
 	"version": "0.1.0",
-	"main": "src/init.luau",
+	"main": "package/init.luau",
 	"scripts": {
 		"build": "rbxtsc",
 		"watch": "rbxtsc -w",
@@ -15,9 +15,9 @@
 	"author": "",
 	"license": "ISC",
 	"description": "",
-	"types": "src/index.d.ts",
+	"types": "package/index.d.ts",
 	"files": [
-		"src",
+		"package",
 		"!**/*.tsbuildinfo"
 	],
 	"publishConfig": {

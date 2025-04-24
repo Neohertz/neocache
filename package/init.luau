@@ -105,7 +105,7 @@ function neocache.new<T>(factory: () -> T, size: number, buffer: number?): NeoCa
 	local meta = setmetatable(self, neocache) :: any
 
 	-- Populate the buffer with default values, then return pointer to zero.
-	for i = 1, buffer do
+	for _ = 1, buffer do
 		neocache.next(meta)
 	end
 	meta.__internal.__pointer = 0
@@ -149,7 +149,7 @@ function neocache.next<T>(self: NeoCache<T>, fast: boolean?): T?
 	end
 
 	-- Find the next unlocked index.
-	for i = 1, self.__internal.__size do
+	for _ = 1, self.__internal.__size do
 		local lock = internal.__lockedIndices[internal.__pointer]
 
 		if lock == nil then
@@ -226,7 +226,7 @@ end
 function neocache.clear(self: NeoCache<any>): ()
 	assert(getmetatable(self), ERROR.NO_SELF)
 
-	for i, inst in self.__internal.__bin do
+	for i, _ in self.__internal.__bin do
 		__deleteIndex(self, i)
 	end
 
